@@ -3,20 +3,25 @@ package com.sa.token.validation;
 import com.sa.token.Token;
 import com.sa.token.TokenSignature;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.time.Instant;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.Assert.assertTrue;
 
 /**
  * Simple unit tests for a {@link TokenReplayPrevention} implementation
  */
-public class ReplayPreventionSimpleTest
-{
+@RunWith(JUnit4.class)
+public class ReplayPreventionSimpleTest {
+    private final Map<String, Token> tokenStore = new ConcurrentHashMap<>();
+
     @Test
-    public void testReplay()
-    {
-        TokenReplayPrevention replayPrevention = new TokenReplayPreventionImpl();
+    public void testReplay() {
+        TokenReplayPrevention replayPrevention = new TokenReplayPreventionImpl(tokenStore);
 
         // Create a test Token to test the TokenReplayPrevention
 

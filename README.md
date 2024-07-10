@@ -12,18 +12,18 @@ TokenReplayPreventionImpl class.
 ## Key Requirements/Givens:
 
 * This class will be instantiated as a singleton by dependency injection. Thus,
-multiple threads may be invoking methods on an instance of the object at any
-given time. The implementation must be thread safe.
+  multiple threads may be invoking methods on an instance of the object at any
+  given time. The implementation must be thread safe.
 
 * It is acceptable to track the tokens in memory -- don't worry about
-maintaining state between server restarts. However, you must ensure that the
-process does not run out of memory under reasonable load. Once a token has
-expired, you do not need to continue tracking replays of it.
+  maintaining state between server restarts. However, you must ensure that the
+  process does not run out of memory under reasonable load. Once a token has
+  expired, you do not need to continue tracking replays of it.
 
 * All tokens passed to the interface are guaranteed to be current and
-properly formed. Validation of their expiration, form, etc. is done prior to the
-interface invocation. Your goal is simply to ensure that a token is not being
-replayed.
+  properly formed. Validation of their expiration, form, etc. is done prior to the
+  interface invocation. Your goal is simply to ensure that a token is not being
+  replayed.
 
 * Comparison of two tokens may be done using the token ID.
 
