@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.stream.IntStream;
 
 /**
  * Concurrency test for replaying same token using multiple threads
@@ -42,8 +43,8 @@ public class ReplayPreventionConcurrencyTest {
     @Test
     public void testReplayWithConcurrency() {
         Instant testStartTime = Instant.now();
-        System.out.println("\nExecuting Concurrency Test for " + NO_OF_SAME_TOKENS_TO_PLAY + " concurrent token play with "+ CONCURRENCY_LEVEL +" threads having same tokenID '" + TOKEN_ID + "'");
-        for (int i = 0; i < NO_OF_SAME_TOKENS_TO_PLAY; i++) {
+        System.out.println("\nExecuting Concurrency Test for " + NO_OF_SAME_TOKENS_TO_PLAY + " concurrent token play with " + CONCURRENCY_LEVEL + " threads having same tokenID '" + TOKEN_ID + "'");
+        IntStream.range(1, NO_OF_SAME_TOKENS_TO_PLAY).forEach(i -> {
             TokenPlayRequest request = new TokenPlayRequest(
                     replayPrevention,
                     TOKEN_ID,
@@ -51,23 +52,28 @@ public class ReplayPreventionConcurrencyTest {
                     Instant.now().plusSeconds(TOKEN_VALID_AFTER_TIME_IN_SEC)
             );
             tokenPlayRequests.add(request);
-        }
+        });
 
         try {
             System.out.println("\n --- Token Play & Replay Execution Concurrently ---");
             List<Future<TokenPlayResponse>> tokenPlayResponses = executorService.invokeAll(tokenPlayRequests);
             System.out.println("\n --- Token Play & Replay Responses ---");
-            for (Future<TokenPlayResponse> response : tokenPlayResponses) {
-                TokenPlayResponse tokenPlayResponse = response.get();
+            tokenPlayResponses.forEach(future -> {
+                TokenPlayResponse tokenPlayResponse = null;
+                try {
+                    tokenPlayResponse = future.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
                 System.out.println(tokenPlayResponse.toString());
-            }
-        } catch (InterruptedException | ExecutionException e) {
+            });
+        } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             executorService.shutdown();
         }
         Assert.assertEquals(tokenStore.size(), 1);
-        System.out.println("\nSize of the tokenStore at the end of the test = "+tokenStore.size());
+        System.out.println("\nSize of the tokenStore at the end of the test = " + tokenStore.size());
         Instant testEndTime = Instant.now();
         System.out.println("Test 'testReplayWithConcurrency' Completed! Execution Time=" + ChronoUnit.MILLIS.between(testStartTime, testEndTime) + "ms.");
     }

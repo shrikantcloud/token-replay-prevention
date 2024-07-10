@@ -41,7 +41,7 @@ public class TokenPlayResponse {
 
     @Override
     public String toString() {
-        if(isTokenReplayed){
+        if (isTokenReplayed) {
             return "Token Replay Response = [" +
                     "tokenId='" + tokenId + '\'' +
                     ", isTokenReplayed=" + isTokenReplayed +
