@@ -4,12 +4,13 @@ import com.sa.token.Token;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TokenReplayPreventionImpl implements TokenReplayPrevention {
 
-    private final Map<String, Token> tokenStore;
     private final ReentrantLock lock = new ReentrantLock(true);
+    private final Map<String, Token> tokenStore;
 
     /**
      * A no-arg constructor used to evaluate the implementation with automated tests.
@@ -18,9 +19,10 @@ public class TokenReplayPreventionImpl implements TokenReplayPrevention {
      * assign reasonable defaults. Please feel free to create additional constructors to
      * allow any tests you choose to implement to control these parameters.
      */
-//    public TokenReplayPreventionImpl() {
-//        tokenStoreMap = new ConcurrentHashMap<>();
-//    }
+    public TokenReplayPreventionImpl() {
+        tokenStore = new ConcurrentHashMap<>();
+    }
+
     public TokenReplayPreventionImpl(final Map<String, Token> tokenStore) {
         this.tokenStore = tokenStore;
     }
@@ -45,7 +47,7 @@ public class TokenReplayPreventionImpl implements TokenReplayPrevention {
         for (String tokenId : tokenStore.keySet()) {
             Token token = tokenStore.get(tokenId);
             if (token.getNotValidAfter().isBefore(Instant.now())) {
-                tokenStore.remove(token.getTokenID());
+                tokenStore.remove(tokenId);
             }
         }
     }

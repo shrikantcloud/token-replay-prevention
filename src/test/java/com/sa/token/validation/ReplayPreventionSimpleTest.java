@@ -2,13 +2,14 @@ package com.sa.token.validation;
 
 import com.sa.token.Token;
 import com.sa.token.TokenSignature;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.time.Instant;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.time.temporal.ChronoUnit;
 
 import static org.junit.Assert.assertTrue;
 
@@ -17,12 +18,18 @@ import static org.junit.Assert.assertTrue;
  */
 @RunWith(JUnit4.class)
 public class ReplayPreventionSimpleTest {
-    private final Map<String, Token> tokenStore = new ConcurrentHashMap<>();
+
+    private TokenReplayPrevention replayPrevention;
+
+    @Before
+    public void setUp() {
+        replayPrevention = new TokenReplayPreventionImpl();
+    }
 
     @Test
     public void testReplay() {
-        TokenReplayPrevention replayPrevention = new TokenReplayPreventionImpl(tokenStore);
-
+        Instant testStartTime = Instant.now();
+        System.out.println("Executing ReplayPreventionSimpleTest (Single Threaded) ...");
         // Create a test Token to test the TokenReplayPrevention
 
         // A dummy token ID
@@ -50,7 +57,13 @@ public class ReplayPreventionSimpleTest {
 
         // The second check should be a replay because we are giving TokenReplayPrevention the same token again
         assertTrue(replayPrevention.isTokenReplayed(token));
-
+        Instant testEndTimeTime = Instant.now();
         // Lots more could be tested...
+        System.out.println("ReplayPreventionSimpleTest Completed! Execution Time taken = " + ChronoUnit.MILLIS.between(testStartTime, testEndTimeTime) + "ms.\n");
+    }
+
+    @After
+    public void tearDown() {
+        replayPrevention = null;
     }
 }
