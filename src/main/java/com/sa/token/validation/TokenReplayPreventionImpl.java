@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class TokenReplayPreventionImpl implements TokenReplayPrevention {
 
-    private final ReentrantLock lock = new ReentrantLock(true);
+    private final ReentrantLock lock;
     private final Map<String, Token> tokenStore;
 
     /**
@@ -21,10 +21,15 @@ public class TokenReplayPreventionImpl implements TokenReplayPrevention {
      */
     public TokenReplayPreventionImpl() {
         tokenStore = new ConcurrentHashMap<>();
+        lock = new ReentrantLock(true);
     }
 
+    /**
+     * Parameterized constructor added for Multi threaded tests
+     */
     public TokenReplayPreventionImpl(final Map<String, Token> tokenStore) {
         this.tokenStore = tokenStore;
+        lock = new ReentrantLock(true);
     }
 
     public boolean isTokenReplayed(Token token) {
