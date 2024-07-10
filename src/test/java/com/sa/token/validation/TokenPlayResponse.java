@@ -41,10 +41,19 @@ public class TokenPlayResponse {
 
     @Override
     public String toString() {
-        return "TokenRelayResult={" +
-                "tokenId='" + tokenId + '\'' +
-                ", isTokenReplayed=" + isTokenReplayed +
-                ", threadName='" + threadName + '\'' +
-                '}';
+        if(isTokenReplayed){
+            return "Token Replay Response = [" +
+                    "tokenId='" + tokenId + '\'' +
+                    ", isTokenReplayed=" + isTokenReplayed +
+                    ", threadName='" + threadName + '\'' +
+                    ']';
+        } else {
+            return "Token 'Play' Response = [" +
+                    "tokenId='" + tokenId + '\'' +
+                    ", isTokenReplayed=" + isTokenReplayed +
+                    ", threadName='" + threadName + '\'' +
+                    ']';
+        }
+
     }
 }

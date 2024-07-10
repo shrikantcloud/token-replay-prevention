@@ -42,7 +42,7 @@ public class ReplayPreventionConcurrencyTest {
     @Test
     public void testReplayWithConcurrency() {
         Instant testStartTime = Instant.now();
-        System.out.println("\nConcurrency Test for " + NO_OF_SAME_TOKENS_TO_PLAY + " concurrent requests having same tokenID '" + TOKEN_ID + "' with " + CONCURRENCY_LEVEL + " threads. ");
+        System.out.println("\nExecuting Concurrency Test for " + NO_OF_SAME_TOKENS_TO_PLAY + " concurrent token play with "+ CONCURRENCY_LEVEL +" threads having same tokenID '" + TOKEN_ID + "'");
         for (int i = 0; i < NO_OF_SAME_TOKENS_TO_PLAY; i++) {
             TokenPlayRequest request = new TokenPlayRequest(
                     replayPrevention,
@@ -56,7 +56,7 @@ public class ReplayPreventionConcurrencyTest {
         try {
             System.out.println("\n --- Token Play & Replay Execution Concurrently ---");
             List<Future<TokenPlayResponse>> tokenPlayResponses = executorService.invokeAll(tokenPlayRequests);
-            System.out.println("\n --- Token Play & Replay Results ---");
+            System.out.println("\n --- Token Play & Replay Responses ---");
             for (Future<TokenPlayResponse> response : tokenPlayResponses) {
                 TokenPlayResponse tokenPlayResponse = response.get();
                 System.out.println(tokenPlayResponse.toString());
@@ -67,8 +67,9 @@ public class ReplayPreventionConcurrencyTest {
             executorService.shutdown();
         }
         Assert.assertEquals(tokenStore.size(), 1);
+        System.out.println("\nSize of the tokenStore at the end of the test = "+tokenStore.size());
         Instant testEndTime = Instant.now();
-        System.out.println("\nTest 'testReplayWithConcurrency' Completed! Execution Time=" + ChronoUnit.MILLIS.between(testStartTime, testEndTime) + "ms.");
+        System.out.println("Test 'testReplayWithConcurrency' Completed! Execution Time=" + ChronoUnit.MILLIS.between(testStartTime, testEndTime) + "ms.");
     }
 
     @After
