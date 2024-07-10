@@ -1,5 +1,8 @@
 package com.sa.token.validation;
 
+/**
+ * TokenPlayResponse to wrap the result after the requests play
+ */
 public class TokenPlayResponse {
 
     private String tokenId;

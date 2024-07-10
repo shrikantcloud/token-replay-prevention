@@ -5,6 +5,9 @@ import com.sa.token.Token;
 import java.time.Instant;
 import java.util.concurrent.Callable;
 
+/**
+ * TokenPlayRequest, a wrapper around Token class to initiate the requests concurrently
+ */
 public class TokenPlayRequest implements Callable<TokenPlayResponse> {
 
     private final String tokenID;

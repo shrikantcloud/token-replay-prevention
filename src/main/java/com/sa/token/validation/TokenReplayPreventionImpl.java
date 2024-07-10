@@ -8,8 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class TokenReplayPreventionImpl implements TokenReplayPrevention {
 
-    private volatile Map<String, Token> tokenStore;
-
+    private final Map<String, Token> tokenStore;
     private final ReentrantLock lock = new ReentrantLock(true);
 
     /**
