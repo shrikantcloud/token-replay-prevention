@@ -17,7 +17,7 @@ import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 /**
- * Concurrency test for replaying same token using multiple threads
+ * Concurrent test for replaying the same token using multiple threads
  */
 @RunWith(JUnit4.class)
 public class ReplayPreventionConcurrentTest {
@@ -27,10 +27,13 @@ public class ReplayPreventionConcurrentTest {
     private static final int NO_OF_SAME_TOKENS_TO_PLAY = 10;
     private static final int TOKEN_VALID_BEFORE_CURRENT_TIME_IN_SEC = 20;
     private static final int TOKEN_VALID_AFTER_CURRENT_TIME_IN_SEC = 60;
+
     private Map<String, Token> tokenStore;
     private List<TokenPlayRequest> tokenPlayRequests;
     private ExecutorService executorService;
     private TokenReplayPrevention replayPrevention;
+
+    private TokenPlayRequest tokenPlayRequest;
 
     @Before
     public void setUp() {
@@ -38,6 +41,16 @@ public class ReplayPreventionConcurrentTest {
         executorService = Executors.newFixedThreadPool(CONCURRENCY_LEVEL);
         tokenPlayRequests = new ArrayList<>();
         replayPrevention = new TokenReplayPreventionImpl(tokenStore);
+
+        IntStream.range(1, NO_OF_SAME_TOKENS_TO_PLAY).forEach(i -> {
+            tokenPlayRequest = new TokenPlayRequest(
+                    replayPrevention,
+                    TOKEN_ID,
+                    Instant.now().minusSeconds(TOKEN_VALID_BEFORE_CURRENT_TIME_IN_SEC),
+                    Instant.now().plusSeconds(TOKEN_VALID_AFTER_CURRENT_TIME_IN_SEC)
+            );
+            tokenPlayRequests.add(tokenPlayRequest);
+        });
     }
 
     @Test
@@ -45,15 +58,6 @@ public class ReplayPreventionConcurrentTest {
         Instant testStartTime = Instant.now();
         System.out.println("\nExecuting ReplayPreventionConcurrentTest (Multi Threaded) ...");
         System.out.println(NO_OF_SAME_TOKENS_TO_PLAY + " concurrent token plays with " + CONCURRENCY_LEVEL + " threads having the same tokenID '" + TOKEN_ID + "'");
-        IntStream.range(1, NO_OF_SAME_TOKENS_TO_PLAY).forEach(i -> {
-            TokenPlayRequest request = new TokenPlayRequest(
-                    replayPrevention,
-                    TOKEN_ID,
-                    Instant.now().minusSeconds(TOKEN_VALID_BEFORE_CURRENT_TIME_IN_SEC),
-                    Instant.now().plusSeconds(TOKEN_VALID_AFTER_CURRENT_TIME_IN_SEC)
-            );
-            tokenPlayRequests.add(request);
-        });
 
         try {
             System.out.println("\n --- Token Play & Replay Execution Concurrently ---");
@@ -84,5 +88,6 @@ public class ReplayPreventionConcurrentTest {
         executorService = null;
         tokenPlayRequests = null;
         replayPrevention = null;
+        tokenPlayRequest = null;
     }
 }
