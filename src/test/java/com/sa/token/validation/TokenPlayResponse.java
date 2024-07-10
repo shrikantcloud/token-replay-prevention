@@ -48,7 +48,7 @@ public class TokenPlayResponse {
                     ", threadName='" + threadName + '\'' +
                     ']';
         } else {
-            return "Token 'Play' Response = [" +
+            return "Token >>>Play<<< Response = [" +
                     "tokenId='" + tokenId + '\'' +
                     ", isTokenReplayed=" + isTokenReplayed +
                     ", threadName='" + threadName + '\'' +
