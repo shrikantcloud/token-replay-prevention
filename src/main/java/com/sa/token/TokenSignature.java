@@ -1,4 +1,4 @@
-package com.pingidentity.token;
+package com.sa.token;
 
 import java.security.PublicKey;
 

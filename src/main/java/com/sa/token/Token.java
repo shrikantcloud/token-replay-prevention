@@ -1,7 +1,6 @@
-package com.pingidentity.token;
+package com.sa.token;
 
 import java.time.Instant;
-import java.util.Date;
 
 /**
  * A class representing a security token.

@@ -1,6 +1,6 @@
-package com.pingidentity.token.validation;
+package com.sa.token.validation;
 
-import com.pingidentity.token.Token;
+import com.sa.token.Token;
 
 public class TokenReplayPreventionImpl implements TokenReplayPrevention
 {

@@ -1,7 +1,7 @@
-package com.pingidentity.token.validation;
+package com.sa.token.validation;
 
-import com.pingidentity.token.Token;
-import com.pingidentity.token.TokenSignature;
+import com.sa.token.Token;
+import com.sa.token.TokenSignature;
 import org.junit.Test;
 
 import java.time.Instant;
