@@ -76,7 +76,7 @@ public class ReplayPreventionConcurrentTest {
         } finally {
             executorService.shutdown();
         }
-        Assert.assertEquals(tokenStore.size(), 1);
+        Assert.assertEquals(1, tokenStore.size());
         System.out.println("\nNumber of Unique tokens in the tokenStore after test = " + tokenStore.size());
         Instant testEndTime = Instant.now();
         System.out.println("ReplayPreventionConcurrentTest Completed! Execution Time taken = " + ChronoUnit.MILLIS.between(testStartTime, testEndTime) + "ms.\n");
